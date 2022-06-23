@@ -160,25 +160,6 @@ plt.xlabel("Time steps t",fontsize=15)
     
 
 
-Another interesting magnitude that we can obtain from the numerical solution is the average interface density (fraction of S-I links in the network).
-
-
-```julia
-int = interface_from(sol)
-
-fig, ax = plt.subplots(figsize=(8,6))
-plt.loglog(sol.t,int,linewidth=4,color="grey")
-ax.tick_params(labelsize=15)
-plt.xlabel("Time steps t",fontsize=15)
-plt.ylabel("Interface density",fontsize=15)
-```
-
-
-    
-![png](output_22_0.png)
-    
-
-
 ### Advices and further refinements
 
 - To avoid problems, one shoud always choose a $\tau_{\rm max}$ higher than the maximum time of evolution $t_{\rm max}$ to consider all possible states that agents can exhibit.
