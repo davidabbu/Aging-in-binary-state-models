@@ -74,12 +74,12 @@ function AME(du,u,p,t)
             # Susceptible
             beta_term = - (k-m)*beta_s*u[1,k+1,m+1,tau_min+1]
             gamma_term = - m*gamma_s*u[1,k+1,m+1,tau_min+1]
-            du[1,k+1,m+1,tau_min+1] = - u[1,k+1,m+1,tau_min+1] + sum(R[k+1,m+1,1:end].*u[2,k+1,m+1,1:end]) + sum(FR[k+1,m+1,1:end].*u[1,k+1,m+1,1:end]) + beta_term + gamma_term
+            du[1,k+1,m+1,tau_min+1] = - (F[k+1,m+1,tau_min+1] + FR[k+1,m+1,tau_min+1] + FA[k+1,m+1,tau_min+1])*u[1,k+1,m+1,tau_min+1] + sum(R[k+1,m+1,1:end].*u[2,k+1,m+1,1:end]) + sum(FR[k+1,m+1,1:end].*u[1,k+1,m+1,1:end]) + beta_term + gamma_term
             
             # Infected
             beta_term = - (k-m)*beta_i*u[2,k+1,m+1,tau_min+1]
             gamma_term = - m*gamma_i*u[2,k+1,m+1,tau_min+1]
-            du[2,k+1,m+1,tau_min+1] = - u[2,k+1,m+1,tau_min+1] + sum(F[k+1,m+1,1:end].*u[1,k+1,m+1,1:end]) + sum(RR[k+1,m+1,1:end].*u[2,k+1,m+1,1:end]) + beta_term + gamma_term
+            du[2,k+1,m+1,tau_min+1] = - (R[k+1,m+1,tau_min+1] + RR[k+1,m+1,tau_min+1] + RA[k+1,m+1,tau_min+1])*u[2,k+1,m+1,tau_min+1] + sum(F[k+1,m+1,1:end].*u[1,k+1,m+1,1:end]) + sum(RR[k+1,m+1,1:end].*u[2,k+1,m+1,1:end]) + beta_term + gamma_term
         end
     end
     
@@ -96,7 +96,7 @@ function AME(du,u,p,t)
                 else
                     terms = (k - m + 1)*beta_s*u[1,k+1,m,j] - (k - m)*beta_s*u[1,k+1,m+1,j+1] - m*gamma_s*u[1,k+1,m+1,j+1] + (m+1)*gamma_s*u[1,k+1,m+2,j]
                 end
-                du[1,k+1,m+1,j+1] = -u[1,k+1,m+1,j+1] + FA[k+1,m+1,j]*u[1,k+1,m+1,j] + terms
+                du[1,k+1,m+1,j+1] = -(F[k+1,m+1,j+1] + FR[k+1,m+1,j+1] + FA[k+1,m+1,j+1])*u[1,k+1,m+1,j+1] + FA[k+1,m+1,j]*u[1,k+1,m+1,j] + terms
                 
                 # Infected
                 if m == 0
@@ -106,7 +106,7 @@ function AME(du,u,p,t)
                 else
                     terms = (k - m + 1)*beta_i*u[2,k+1,m,j] - (k - m)*beta_i*u[2,k+1,m+1,j+1] - m*gamma_i*u[2,k+1,m+1,j+1] + (m+1)*gamma_i*u[2,k+1,m+2,j]
                 end
-                du[2,k+1,m+1,j+1] = -u[2,k+1,m+1,j+1] + FA[k+1,m+1,j]*u[2,k+1,m+1,j] + terms + terms
+                du[2,k+1,m+1,j+1] = -(R[k+1,m+1,j+1] + RR[k+1,m+1,j+1] + RA[k+1,m+1,j+1])*u[2,k+1,m+1,j+1] + RA[k+1,m+1,j]*u[2,k+1,m+1,j] + terms
             end
         end
     end  
