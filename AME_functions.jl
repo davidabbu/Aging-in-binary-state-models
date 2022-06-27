@@ -14,10 +14,30 @@ end
 
 function interface(k_min,k_max,z,susceptible)
     suma = 0
+    denom = 0
     for k in k_min:k_max
         suma_m = 0
         for m in 0:k
-            suma_m = suma_m + m*sum(susceptible[k+1,m+1,:])
+            suma_m = suma_m + m*sum(susceptible[k+1,m+1,1:end])
+        end
+        suma = suma + dist(z,k)*suma_m
+        denom = denom + 0.5*k*dist(z,k)
+    end
+    return suma/denom
+end
+
+function persistence(k_min,k_max,tau_max,tp,z,susceptible,infected)
+    suma = 0
+    for k in k_min:k_max
+        suma_m = 0
+        for m in 0:k
+            suma_j = 0
+            for j in 0:tau_max
+                if j > floor(tp-1)
+                    suma_j = suma_j + susceptible[k+1,m+1,j+1] + infected[k+1,m+1,j+1]
+                end
+            end
+            suma_m = suma_m + suma_j
         end
         suma = suma + dist(z,k)*suma_m
     end
@@ -143,4 +163,16 @@ function interface_from(sol)
         push!(arr_rho,interface(k_min,k_max,z,u_s[1,:,:,:]))
     end
     return arr_rho
+end
+
+function persistence_from(sol)
+    arr_rho = []
+    a_t = []
+    for index in 1:10:length(sol)
+        u_s = sol[index]
+        tp = sol.t[index]
+        push!(arr_rho,persistence(k_min,k_max,tau_max,tp,z,u_s[1,:,:,:],u_s[2,:,:,:]))
+        push!(a_t,tp)
+    end
+    return [a_t,arr_rho]
 end

@@ -145,18 +145,58 @@ We are interested on how the fraction of susceptible $S$ and infected $I$ nodes 
 I = infected_from(sol)
 S = susceptible_from(sol)
 
-fig, ax = plt.subplots(figsize=(8,6))
-plt.loglog(sol.t,I,label="I(t)",color="blue",linewidth=4,linestyle="-")
-plt.loglog(sol.t,S,label="S(t)",color="red",linewidth=4,linestyle="-")
-plt.loglog(sol.t,I .+ S,label="S(t) + I(t) = 1",color="green",linewidth=4,linestyle="--")
-ax.tick_params(labelsize=15)
-plt.legend(fontsize=15)
-plt.xlabel("Time steps t",fontsize=15)
+fig, (ax1,ax2) = plt.subplots(1,2,figsize=(15,5))
+
+ax1.loglog(sol.t,I,label="I(t)",color="blue",linewidth=4,linestyle="-")
+ax1.loglog(sol.t,S,label="S(t)",color="red",linewidth=4,linestyle="-")
+ax1.loglog(sol.t,I .+ S,label="S(t) + I(t) = 1",color="green",linewidth=4,linestyle="--")
+ax1.tick_params(labelsize=15)
+ax1.legend(fontsize=15)
+
+ax2.plot(sol.t,I,label="I(t)",color="blue",linewidth=4,linestyle="-")
+ax2.plot(sol.t,S,label="S(t)",color="red",linewidth=4,linestyle="-")
+ax2.plot(sol.t,I .+ S,label="S(t) + I(t) = 1",color="green",linewidth=4,linestyle="--")
+ax2.tick_params(labelsize=15)
+ax2.legend(fontsize=15)
 ```
 
 
     
 ![png](output_20_0.png)
+    
+
+
+
+
+
+    PyObject <matplotlib.legend.Legend object at 0x7f9086127750>
+
+
+
+Another interesting magnitudes that we can obtain from the numerical solution is the **average interface density** (fraction of S-I links in the network) and the **persistence** (fraction of nodes in the intial state)
+
+
+```julia
+int = interface_from(sol)  # Interface calculation
+
+fig, (ax1,ax2) = plt.subplots(1,2,figsize=(15,5))
+ax1.loglog(sol.t,int,linewidth=4,color="grey")
+ax1.tick_params(labelsize=15)
+ax1.set_xlabel("Time steps t",fontsize=15)
+ax1.set_ylabel("Interface density",fontsize=15)
+
+time, per = persistence_from(sol)  # Persistence calculation
+
+ax2.plot(time,per,linewidth=4,color="purple")
+ax2.set_yscale("log")
+ax2.tick_params(labelsize=15)
+ax2.set_xlabel("Time steps t",fontsize=15)
+ax2.set_ylabel("Persistence",fontsize=15);
+```
+
+
+    
+![png](output_22_0.png)
     
 
 
